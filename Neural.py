@@ -1,19 +1,19 @@
 import tensorflow as tf
 import DataGetter
 import numpy as np
+import imp
+
+
 
 def main(x_train,y_train,x_test,y_test):
+    hack_int = np.random.randint(0,100000000)
     
-    n_labels = np.unique(y_train).size
+    n_labels = y_train.shape[1]
     
     INPUT_SIZE = 561
     OUTPUT_SIZE = n_labels
-    HIDDEN_SIZES = [512,256,128,64,32,16]
-    NUM_TRAINING_STEPS = 2000
-    
-    y_train = DataGetter.reformat(y_train,n_labels)
-    y_test = DataGetter.reformat(y_test,n_labels)
-    
+    HIDDEN_SIZES = [100,100,100]
+    NUM_TRAINING_STEPS = 1000    
 
     keep_prob = tf.placeholder(tf.float32) 
     
@@ -31,9 +31,9 @@ def main(x_train,y_train,x_test,y_test):
     
     for i in range(0,len(HIDDEN_SIZES)):
         print("creating layer: " + str(i))
-        wtmp = tf.get_variable("Hidden_W%d" %(i), shape=[inp_size, h_size], initializer=initializer)
-        btmp = tf.get_variable("Hidden_b%d" %(i), shape=[h_size], initializer=initializer)
-    
+        wtmp = tf.get_variable("Hidden_W%d_%d" %(i,hack_int), shape=[inp_size, h_size], initializer=initializer)
+        btmp = tf.get_variable("Hidden_b%d_%d" %(i,hack_int), shape=[h_size], initializer=initializer)        
+        
         # Hidden Layer Transformation
         hidden = tf.nn.relu(tf.matmul(inp, wtmp) + btmp)
         hidden_drop = tf.nn.dropout(hidden, keep_prob)
@@ -45,8 +45,8 @@ def main(x_train,y_train,x_test,y_test):
             h_size = HIDDEN_SIZES[i+1]
     
     # Output Layer Transformation
-    w_out = tf.get_variable("Output_W", shape=[HIDDEN_SIZES[-1], OUTPUT_SIZE], initializer=initializer)
-    b_out = tf.get_variable("Output_b", shape=[OUTPUT_SIZE], initializer=initializer)
+    w_out = tf.get_variable("Output_W_%d" %(hack_int), shape=[HIDDEN_SIZES[-1], OUTPUT_SIZE], initializer=initializer)
+    b_out = tf.get_variable("Output_b_%d" %(hack_int), shape=[OUTPUT_SIZE], initializer=initializer)
     output = tf.matmul(inp, w_out) + b_out
     
     # Compute Loss
@@ -69,7 +69,7 @@ def main(x_train,y_train,x_test,y_test):
             curr_acc, _ = sess.run([accuracy, train_op], feed_dict={X: x_train, Y: y_train, keep_prob: 0.5})
             if i % 100 == 0:
                 print('Step %d Current Training Accuracy: %.3f' % (i, curr_acc))
-        
+        acc = sess.run(accuracy, feed_dict={X: x_test, Y: y_test, keep_prob: 1.0})
         # Evaluate on Test Data
-        print('Test Accuracy: %.3f' % sess.run(accuracy, feed_dict={X: x_test, 
-                                                                    Y: y_test, keep_prob: 1.0}))
+
+        return acc

@@ -1,8 +1,9 @@
 import DataGetter
 import DataProcessor
-import Neural
+import RFC
 import numpy as np
 
+#num_train_all = (1,2,5,10,15)
 num_train_all = (1,2,5,10,15)
 num_test = 5
 n_trials = 10
@@ -40,15 +41,16 @@ for trial in range(0,n_trials):
             s_use_test = s_use[idx_test]
             
             y_use_train = y_use[idx_train]
-            y_use_test = y_use[idx_test] 
+            y_use_test = y_use[idx_test]
             
-            s_use_train = DataGetter.reformat(s_use_train,np.unique(s_use_train).size)
-            s_use_test = DataGetter.reformat(s_use_test,np.unique(s_use_test).size)
+            #s_use_train = DataGetter.reformat(s_use_train,np.unique(s_use_train).size)
+            #s_use_test = DataGetter.reformat(s_use_test,np.unique(s_use_test).size)
                 
-            acc = Neural.main(x_use_train,s_use_train,x_use_test,s_use_test)
+            #acc = Neural.main(x_use_train,s_use_train,x_use_test,s_use_test)
+            acc = RFC.run_rfc(x_use_train,s_use_train,x_use_test,s_use_test)
             
             print("here is acc for trial/nt/i: %d/%d/%d (%f)" %(trial,nt,i,acc))
             
             accs[i,nt] = acc
             
-    np.save('res_nn/trial%d' %(trial),accs)
+    np.save('res_rfc/trial%d' %(trial),accs)

@@ -6,6 +6,10 @@ def join_data(x_train,y_train,s_train,x_test,y_test,s_test):
     s = np.concatenate((s_train,s_test),axis=0)
     return(x,y,s)
 
+def filter_data(s,label):
+    tmp = np.random.permutation(np.argwhere(s==label))
+    return tmp[:,0]
+
 def split_data(s,num_train,num_test):
     num_class = np.unique(s).size
     
@@ -14,6 +18,8 @@ def split_data(s,num_train,num_test):
     
     for i in range(0,num_class):
         idx = np.random.permutation(np.argwhere(s==i))
+        
+        assert num_train + num_test <= idx.size
         
         train_idx_all = np.concatenate((train_idx_all,idx[0:num_train]),axis=0)
         test_idx_all = np.concatenate((test_idx_all,idx[num_train:num_train+num_test]),axis=0)

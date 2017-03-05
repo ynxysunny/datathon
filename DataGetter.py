@@ -4,7 +4,7 @@ def reformat(y,num_ent):
 
     res = np.zeros((y.size,num_ent),dtype=np.int)
     for i in range(0,y.size):
-        res[i,int(y[i]-1)] = 1
+        res[i,int(y[i])] = 1
 
     return res
     
