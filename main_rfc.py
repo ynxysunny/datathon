@@ -8,7 +8,7 @@ num_train_all = (1,2,5,10,15)
 num_test = 5
 n_trials = 10
 
-n_act = 6;
+n_act = 7;
 
 (x_train,y_train,s_train) = DataGetter.get_data(is_train=True)
 (x_test,y_test,s_test) = DataGetter.get_data(is_train=False)
@@ -27,10 +27,15 @@ for trial in range(0,n_trials):
         num_train = num_train_all[nt]
         for i in range(0,n_act):
             
-            idx = DataProcessor.filter_data(y_all,i) 
-            x_use = x_all[idx,:]
-            s_use = s_all[idx]
-            y_use = y_all[idx]
+            if(i < n_act-1):
+                idx = DataProcessor.filter_data(y_all,i) 
+                x_use = x_all[idx,:]
+                s_use = s_all[idx]
+                y_use = y_all[idx]
+            else:
+                x_use = x_all
+                s_use = s_all
+                y_use = y_all
             
             idx_train,idx_test = DataProcessor.split_data(s_use,num_train,num_test)
             
@@ -49,8 +54,10 @@ for trial in range(0,n_trials):
             #acc = Neural.main(x_use_train,s_use_train,x_use_test,s_use_test)
             acc = RFC.run_rfc(x_use_train,s_use_train,x_use_test,s_use_test)
             
-            print("here is acc for trial/nt/i: %d/%d/%d (%f)" %(trial,nt,i,acc))
             
+            print("here is acc for trial/nt/i: %d/%d/%d (%f)" %(trial,nt,i,acc))            
             accs[i,nt] = acc
-            
+
+        
+        
     np.save('res_rfc/trial%d' %(trial),accs)

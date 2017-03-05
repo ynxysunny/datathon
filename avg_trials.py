@@ -14,25 +14,24 @@ def plot_res(folder,algo_name,num_trials=10):
             
     avg_accs /= num_trials
     
-    print avg_accs[0,:]
-    
     num_train_all = (1,2,5,10,15)
     plt.figure()
-    plt.plot(num_train_all, avg_accs[0,:])
     
-    labels = ('walking','walking_up','walking_down','sitting','standing','laying')
+    labels = ('walking','walking_up','walking_down','sitting','standing','laying','all')
+    print(len(labels))
     
-    for i in range(0,6):
-        plt.plot(num_train_all,avg_accs[i,:],label=labels[i])
+    for j in range(0,7):
+        plt.plot(num_train_all,avg_accs[j,:],label=labels[j])
     
     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
     plt.ylabel('Accuracy')
     plt.xlabel('Number of Observations')
     plt.title('User Learning Conditioned on Activity: %s' %(algo_name))
+    plt.yticks([0.1*x for x in range(0,11)])
     plt.show()
 
-SVM.main()
+#SVM.main()
 plt.close("all")
 plot_res('res_rbf_svm','RBF-SVM')
-plot_res('res_rbf_svm','Deep net',6)
-plot_res('res_rfc','RFC')
+#plot_res('res_rbf_svm','Deep net',6)
+plot_res('res_rfc','Random Forests')
