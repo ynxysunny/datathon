@@ -1,3 +1,1 @@
-datahon
-
-GO TEAM GO!
+My teammates, Jeroen Chua and Isaac Solomon, and I participated in Brown's first datathon in Feb 2017.  We trained multiple classifiers on the "Human Activity Recognition Using Smartphones Data Set" at UCI machine learning repository to classify user movements, including SVM, random forest classifier, and a neural network via tensorflow. 
